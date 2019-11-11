@@ -16,7 +16,7 @@ public class UserDAO {
         Connection conn = DBConn.getConn();
         checkUserAlreadyExists(user, conn);
         String[] passCredentials = Hasher.hashPassword(user.getPassword());
-        String query = "Insert into users values (?,?,?,?,?,?)";
+        String query = "Insert into users values (?,?,?,?,?,?);";
         PreparedStatement st = conn.prepareStatement(query);
         st.setString(1, user.getEmail());
         st.setString(2, user.getFullname());
@@ -29,7 +29,7 @@ public class UserDAO {
     }
 
     private static void checkUserAlreadyExists(User user, Connection conn) throws SQLException {
-        String query = "Select email from users where email = (?)";
+        String query = "Select email from users where email = (?);";
         PreparedStatement st = conn.prepareStatement(query);
         st.setString(1, user.getEmail());
         ResultSet result = st.executeQuery();
@@ -38,7 +38,7 @@ public class UserDAO {
     }
 
     private static void validateCredentials(String email, String password, Connection conn) throws SQLException {
-        String query = "Select password, salt from users where email = (?)";
+        String query = "Select password, salt from users where email = (?);";
         PreparedStatement st = conn.prepareStatement(query);
         st.setString(1, email);
         ResultSet result = st.executeQuery();
@@ -53,7 +53,7 @@ public class UserDAO {
     public static User retrieveUserDetails(String email, String password) throws SQLException {
         Connection conn = DBConn.getConn();
         validateCredentials(email, password, conn);
-        String query = "Select fullname, sex, balance from users where email = (?)";
+        String query = "Select fullname, sex, balance from users where email = (?);";
         PreparedStatement st = conn.prepareStatement(query);
         st.setString(1, email);
         ResultSet result = st.executeQuery();

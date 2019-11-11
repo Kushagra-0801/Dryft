@@ -13,7 +13,7 @@ import java.util.List;
 public class LocationDAO {
     public static Location getLocation(String name) throws SQLException {
         Connection conn = DBConn.getConn();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM locations WHERE name = (?)");
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM locations WHERE name = (?);");
         st.setString(1, name);
         ResultSet result = st.executeQuery();
         DBConn.closeConn();
@@ -26,7 +26,7 @@ public class LocationDAO {
 
     public static List<Location> getAllLocations() throws SQLException {
         Connection conn = DBConn.getConn();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM locations");
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM locations;");
         ResultSet result = st.executeQuery();
         List<Location> locations = new ArrayList<>();
         while (result.next()) {

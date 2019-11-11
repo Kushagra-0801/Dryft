@@ -15,7 +15,7 @@ import java.util.List;
 public class DriverDAO {
     public static Driver getDriver(int id) throws SQLException {
         Connection conn = DBConn.getConn();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM drivers WHERE id = (?)");
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM drivers WHERE id = (?);");
         st.setInt(1, id);
         ResultSet result = st.executeQuery();
         DBConn.closeConn();
@@ -38,7 +38,7 @@ public class DriverDAO {
     public static List<Driver> getAllDriversInALocation(Location location) throws SQLException {
         List<Driver> drivers = new ArrayList<>();
         Connection conn = DBConn.getConn();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM drivers where location = (?)");
+        PreparedStatement st = conn.prepareStatement("SELECT * FROM drivers where location = (?);");
         ResultSet result = st.executeQuery();
         while (result.next()) {
             Driver driver = new Driver(
@@ -62,7 +62,7 @@ public class DriverDAO {
                 "SELECT * FROM " +
                         "(drivers INNER JOIN cars c ON drivers.carNumber = c.licenseNumber INNER JOIN locations l on drivers.location = l.name) " +
                         "WHERE sex = (?) AND CarType = (?) " +
-                        "ORDER BY (abs((?) - x) + abs((?) - y)), rating DESC"
+                        "ORDER BY (abs((?) - x) + abs((?) - y)), rating DESC;"
         );
         st.setString(1, String.valueOf(userSex));
         st.setString(2, type.name());
@@ -88,12 +88,12 @@ public class DriverDAO {
 
     public static boolean markDriverOnRoadIfFree(int id) throws SQLException {
         Connection conn = DBConn.getConn();
-        PreparedStatement st = conn.prepareStatement("SELECT onRoad from drivers where id = (?)");
+        PreparedStatement st = conn.prepareStatement("SELECT onRoad from drivers where id = (?);");
         st.setInt(1, id);
         var result = st.executeQuery();
         if (result.next()) {
             if (!result.getBoolean("onRoad")) {
-                st = conn.prepareStatement("UPDATE drivers set onRoad = (?) WHERE id = (?)");
+                st = conn.prepareStatement("UPDATE drivers set onRoad = (?) WHERE id = (?);");
                 st.setBoolean(1, true);
                 st.setInt(2, id);
                 st.executeQuery();
