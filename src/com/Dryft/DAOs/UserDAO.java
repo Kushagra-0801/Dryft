@@ -52,10 +52,22 @@ public class UserDAO {
         ResultSet result = st.executeQuery();
         result.next();
         String fullname = result.getString("fullname");
-        char sex = result.getCharacterStream("sex");
+        char sex = result.getString("sex").charAt(0);
         int balance = result.getInt("balance");
         User user = new User(fullname, email, password, sex, balance);
         DBConn.closeConn();
         return user;
+    }
+
+    public static void incrementBalance(String email, int balance) throws SQLException {
+        Connection conn = DBConn.getConn();
+        String query = "Update users set balance= (?) where email = (?);";
+        PreparedStatement st = conn.prepareStatement(query);
+        st.setInt(1, balance);
+        st.setString(2, email);
+        ResultSet result = st.executeQuery();
+        if (!result.next())
+            throw new IllegalArgumentException("User not found");
+        DBConn.closeConn();
     }
 }
