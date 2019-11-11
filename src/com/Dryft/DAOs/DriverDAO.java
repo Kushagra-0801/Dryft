@@ -58,13 +58,16 @@ public class DriverDAO {
 
     public static Driver getBestDriver(char userSex, Location origin, Car.CarType type) throws SQLException {
         Connection conn = DBConn.getConn();
-        PreparedStatement st = conn.prepareStatement("SELECT * FROM " +
-                "(drivers INNER JOIN cars ON drivers.carNumber = cars.licenseNumber) " +
-                "WHERE sex = (?) AND location = (?) AND CarType = (?) " +
-                "ORDER BY rating DESC");
+        PreparedStatement st = conn.prepareStatement(
+                "SELECT * FROM " +
+                        "(drivers INNER JOIN cars c ON drivers.carNumber = c.licenseNumber INNER JOIN locations l on drivers.location = l.name) " +
+                        "WHERE sex = (?) AND CarType = (?) " +
+                        "ORDER BY (abs((?) - x) + abs((?) - y)), rating DESC"
+        );
         st.setString(1, String.valueOf(userSex));
-        st.setString(2, origin.getName());
-        st.setString(3, type.name());
+        st.setString(2, type.name());
+        st.setInt(3, origin.getX());
+        st.setInt(4, origin.getY());
         var result = st.executeQuery();
         DBConn.closeConn();
         if (result.next()) {
