@@ -65,4 +65,31 @@ public class UserDAO {
         DBConn.closeConn();
         return user;
     }
+
+    public static boolean addMoney(User user, int amt) throws SQLException {
+        Connection conn = DBConn.getConn();
+        var st = conn.prepareStatement("SELECT balance FROM users where email = (?);");
+        st.setString(1, user.getEmail());
+        var result = st.executeQuery();
+        if (result.next()) {
+            var initBalance = result.getInt("balance");
+            if (initBalance + amt >= 0) {
+                st = conn.prepareStatement("UPDATE users SET balance = (?) WHERE email = (?);");
+                st.setInt(1, initBalance + amt);
+                st.setString(2, user.getEmail());
+                st.executeUpdate();
+                DBConn.closeConn();
+                user.setBalance(initBalance + amt);
+                return true;
+            } else {
+                DBConn.closeConn();
+                return false;
+            }
+        } else {
+            DBConn.closeConn();
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+
 }
