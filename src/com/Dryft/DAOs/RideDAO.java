@@ -4,29 +4,26 @@ import com.Dryft.models.Ride;
 import com.Dryft.models.User;
 import com.Dryft.utils.DBConn;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Connection;
-import java.util.List;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RideDAO {
 
     public static void startRide(Ride ride) throws SQLException {
         Connection conn = DBConn.getConn();
         PreparedStatement st = conn.prepareStatement("INSERT INTO rides "
-                + "(userEmail, driver, source, destination, startTime, duration, distance, cost,driverTime)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?);");
+                + "(id, userEmail, driver, source, destination, startTime, duration, distance, cost, driverTime)"
+                + "VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
         st.setString(1, ride.getUser().getEmail());
         st.setInt(2, ride.getDriver().getId());
         st.setString(3, ride.getSource().getName());
         st.setString(4, ride.getDestination().getName());
         st.setTimestamp(5, Timestamp.valueOf(ride.getStartTime()));
         st.setInt(6, ride.getDuration());
-        st.setInt(7, ride.getCost());
-        st.setInt(7, ride.getDriverTime());
+        st.setInt(7, ride.getDistance());
+        st.setInt(8, ride.getCost());
+        st.setInt(9, ride.getDriverTime());
         st.executeUpdate();
         st = conn.prepareStatement("UPDATE drivers SET location = (?),onRoad = (?) WHERE id = (?);");
         st.setString(1, ride.getDestination().getName());

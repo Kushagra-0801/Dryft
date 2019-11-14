@@ -66,7 +66,7 @@ public class DriverDAO {
         st.setInt(1, driver.getId());
         ResultSet result = st.executeQuery();
         if (result.next()) {
-            if (!result.getBoolean("onRoad")) {
+            if (result.getBoolean("onRoad")) {
                 DBConn.closeConn();
                 throw new IllegalArgumentException("Driver Already Occupied");
             }

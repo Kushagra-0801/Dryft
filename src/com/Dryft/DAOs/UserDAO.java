@@ -90,12 +90,7 @@ public class UserDAO {
         PreparedStatement st = conn.prepareStatement(query);
         st.setInt(1, balance);
         st.setString(2, email);
-        ResultSet result = st.executeQuery();
-        if (!result.next()) {
-            DBConn.closeConn();
-            throw new IllegalArgumentException("User not found");
-        }
+        st.executeUpdate();
         DBConn.closeConn();
     }
-
 }

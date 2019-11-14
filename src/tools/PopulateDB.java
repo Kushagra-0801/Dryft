@@ -8,10 +8,10 @@ import java.sql.Statement;
 public class PopulateDB {
 
     private static void makeTables(Connection conn) {
-        makeUserTable(conn);
-        makeDriverTable(conn);
-        makeCarTable(conn);
-        makeLocationTable(conn);
+//        makeUserTable(conn);
+//        makeDriverTable(conn);
+//        makeCarTable(conn);
+//        makeLocationTable(conn);
         makeRideTable(conn);
     }
 

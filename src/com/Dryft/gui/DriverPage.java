@@ -9,7 +9,9 @@ import com.Dryft.models.Driver;
 import com.Dryft.models.Location;
 import com.Dryft.models.Ride;
 import com.Dryft.models.User;
-import javax.swing.JOptionPane;
+
+import javax.swing.*;
+import java.sql.SQLException;
 
 /**
  *
@@ -18,6 +20,9 @@ import javax.swing.JOptionPane;
 public class DriverPage extends javax.swing.JFrame {
 
     User user;
+    Driver driver;
+    Location source;
+    Location dest;
     String name;
     String licenseNumber;
     String carModel;
@@ -30,6 +35,9 @@ public class DriverPage extends javax.swing.JFrame {
      */
     public DriverPage() {
         user = null;
+        driver = null;
+        source = null;
+        dest = null;
         name = "dlsg";
         licenseNumber = "ABLCNFAE2";
         carModel = "Tesla 3";
@@ -41,6 +49,9 @@ public class DriverPage extends javax.swing.JFrame {
 
     public DriverPage(User user, Driver driver, Location source, Location dest) {
         this.user = user;
+        this.driver = driver;
+        this.source = source;
+        this.dest = dest;
         name = driver.getName();
         licenseNumber = driver.getCar().getLicenseNumber();
         carModel = driver.getCar().getModel();
@@ -209,19 +220,14 @@ public class DriverPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new timerPage().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -248,6 +254,22 @@ public class DriverPage extends javax.swing.JFrame {
             }
         });
     }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            user.bookRide(driver, source, dest);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "This driver has been booked. Please book another ride.");
+            new Home(user).setVisible(true);
+            this.dispose();
+            return;
+        }
+        new timerPage().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
